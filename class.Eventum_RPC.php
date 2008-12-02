@@ -69,7 +69,7 @@ class Eventum_RPC {
         $result = $client->send($msg);
 
         if ($result->faultCode()) {
-            throw Eventum_RPC_Exception($result->faultString());
+            throw new Eventum_RPC_Exception($result->faultString());
         }
 
         $details = XML_RPC_decode($result->value());
