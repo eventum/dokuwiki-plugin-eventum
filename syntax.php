@@ -102,7 +102,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             // get plugin config
             $c = $conf['plugin']['eventum'];
             $client = new Eventum_RPC();
-            $client->setAuth($c['username'], $c['password']);
+            $client->setCredentials($c['username'], $c['password']);
             $client->setURL($c['url']);
 
             // and link to eventum

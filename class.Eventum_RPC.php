@@ -16,13 +16,38 @@ class Eventum_RPC_Exception extends Exception {
 };
 
 class Eventum_RPC {
-    private $user;
+    /**
+     * A user name for accessing the RPC server
+     * @var string
+     * @see XML_RPC_Client::setCredentials()
+     */
+    private $username;
+    /**
+     * A password for accessing the RPC server
+     * @var string
+     * @see XML_RPC_Client::setCredentials()
+     */
     private $password;
+
+    /**
+     * The URL of Eventum installation to send requests to
+     * @var string
+     */
     private $url;
 
-    public function setAuth($user, $password) {
-        $this->user = $user;
-        $this->password = $password;
+    /**
+     * Set username and password properties for connecting to the RPC server
+     *
+     * @param string $u  the user name
+     * @param string $p  the password
+     *
+     * @return void
+     *
+     * @see XML_RPC_Client::$username, XML_RPC_Client::$password
+     */
+    public function setCredentials($u, $p) {
+        $this->username = $u;
+        $this->password = $p;
     }
 
     public function setURL($url) {
@@ -54,7 +79,7 @@ class Eventum_RPC {
 
     public function __call($method, $args) {
         $params = array();
-        $params[] = new XML_RPC_Value($this->user, 'string');
+        $params[] = new XML_RPC_Value($this->username, 'string');
         $params[] = new XML_RPC_Value($this->password, 'string');
         foreach ($args as $arg) {
             $type = gettype($arg);
