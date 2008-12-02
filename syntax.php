@@ -16,6 +16,13 @@ require_once(DOKU_PLUGIN.'syntax.php');
 require_once 'class.Eventum_RPC.php';
 
 /**
+// auth info for xml rpc
+$conf['plugin']['eventum']['url'] = '';
+$conf['plugin']['eventum']['username'] = '';
+$conf['plugin']['eventum']['password'] = '';
+ */
+
+/**
  * All DokuWiki plugins to extend the parser/rendering mechanism
  * need to inherit from this class
  */
@@ -80,11 +87,6 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             return false;
         }
 
-        // get url from interwiki data
-        $iw = getInterwiki();
-        $url = $iw['issue'];
-        $url = str_replace('{NAME}', $data['id'], $iw['issue']);
-
         // link title
         $link = hsc('issue #'. $data['id']);
         $title = '';
@@ -93,13 +95,21 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         }
 
         // fetch extra data from eventum
-        $eventum_url = '';
-        $user_email = '';
-        $user_password = '';
+        static $client = null;
+        static $eventum_url;
+        if (!$client) {
+            global $conf;
+            // get plugin config
+            $c = $conf['plugin']['eventum'];
+            $client = new Eventum_RPC();
+            $client->setAuth($c['username'], $c['password']);
+            $client->setURL($c['url']);
 
-        $client = new Eventum_RPC();
-        $client->setAuth($user_email, $user_password);
-        $client->setURL($eventum_url);
+            // and link to eventum
+            $eventum_url = $c['url'] . 'view.php?id=';
+        }
+        $url = $eventum_url . $data['id'];
+
         try {
             $details = $client->getIssueDetails((int )$data['id']);
         } catch (Eventum_RPC_Exception $e) {
