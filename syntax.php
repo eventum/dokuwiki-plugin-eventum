@@ -35,7 +35,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
       return array(
         'author' => 'Elan Ruusamäe',
         'email'  => 'glen@delfi.ee',
-        'date'   => '2008-09-10',
+        'date'   => '2008-12-02',
         'name'   => 'Eventum Plugin',
         'desc'   => 'Eventum addons plugin',
         'url'    => 'https://cvs.delfi.ee/dokuwiki/plugin/eventum/',
