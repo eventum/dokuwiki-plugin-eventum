@@ -40,7 +40,7 @@ class Eventum_RPC {
         if (!isset($data['port'])) {
             $data['port'] = $data['scheme'] == 'https' ? 443 : 80;
         }
-        $data['path'] .= 'rpc/xmlrpc.php';
+        $data['path'] .= '/rpc/xmlrpc.php';
 
         $this->client = new XML_RPC_Client($data['path'], $data['host'], $data['port']);
         $this->client->setDebug($this->debug);

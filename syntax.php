@@ -17,9 +17,9 @@ require_once 'class.Eventum_RPC.php';
 
 /**
 // auth info for xml rpc
-$conf['plugin']['eventum']['url'] = '';
-$conf['plugin']['eventum']['username'] = '';
-$conf['plugin']['eventum']['password'] = '';
+$conf['plugin']['eventum']['url'] = 'http://example.org/eventum';
+$conf['plugin']['eventum']['username'] = 'admin@example.org';
+$conf['plugin']['eventum']['password'] = 'admin';
  */
 
 /**
@@ -106,7 +106,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $client->setURL($c['url']);
 
             // and link to eventum
-            $eventum_url = $c['url'] . 'view.php?id=';
+            $eventum_url = $c['url'] . '/view.php?id=';
         }
         $url = $eventum_url . $data['id'];
 
