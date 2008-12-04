@@ -93,6 +93,9 @@ class Eventum_RPC {
         $client = $this->getClient();
         $result = $client->send($msg);
 
+        if ($result == 0) {
+            throw new Eventum_RPC_Exception($client->errstr);
+        }
         if ($result->faultCode()) {
             throw new Eventum_RPC_Exception($result->faultString());
         }
