@@ -53,7 +53,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * Where to sort in?
      */
     function getSort() {
-        return 300;
+        return 290;
     }
 
     /**
