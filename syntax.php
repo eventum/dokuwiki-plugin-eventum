@@ -35,7 +35,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
       return array(
         'author' => 'Elan Ruusamäe',
         'email'  => 'glen@delfi.ee',
-        'date'   => '2009-02-02',
+        'date'   => '2009-02-19',
         'name'   => 'Eventum Plugin',
         'desc'   => 'Eventum addons plugin',
         'url'    => 'https://cvs.delfi.ee/dokuwiki/plugin/eventum/',
@@ -74,7 +74,10 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         // extract id
         list($id, $attrs) = explode('&', $match, 2);
 
-        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs, 'title' => hsc($title));
+        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs);
+        if (!is_null($title)) {
+            $data['title'] = hsc($title);
+        }
         return $data;
     }
 
@@ -89,8 +92,8 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
         // link title
         $link = hsc('issue #'. $data['id']);
-        $title = '';
-        if (!empty($data['title'])) {
+        $title = null;
+        if (isset($data['title'])) {
             $title = $data['title'];
         }
 
@@ -122,7 +125,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $renderer->doc .= '<strike>';
         }
         $renderer->doc .= '<a class="interwiki iw_issue" href="'.$url.'" target="_blank" title="'.$details['iss_summary'].'">'.$link.'</a>';
-        if ($title) {
+        if (!is_null($title)) {
             $renderer->doc .= ': '.$title;
         } elseif ($details['iss_summary']) {
             $renderer->doc .= ': '.hsc($details['iss_summary']);
