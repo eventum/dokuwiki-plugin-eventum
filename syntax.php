@@ -35,7 +35,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
       return array(
         'author' => 'Elan Ruusamäe',
         'email'  => 'glen@delfi.ee',
-        'date'   => '2009-02-19',
+        'date'   => '2010-09-15',
         'name'   => 'Eventum Plugin',
         'desc'   => 'Eventum addons plugin',
         'url'    => 'https://cvs.delfi.ee/dokuwiki/plugin/eventum/',
@@ -74,30 +74,14 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         // extract id
         list($id, $attrs) = explode('&', $match, 2);
 
-        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs);
-        if (!is_null($title)) {
-            $data['title'] = hsc($title);
-        }
+        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs, 'title' => trim($title));
         return $data;
     }
 
     /**
-     * Create output
+     * Query extra data from Eventum server
      */
-    function render($format, &$renderer, $data) {
-        global $ID;
-        if ($format != 'xhtml') {
-            return false;
-        }
-
-        // link title
-        $link = hsc('issue #'. $data['id']);
-        $title = null;
-        if (isset($data['title'])) {
-            $title = $data['title'];
-        }
-
-        // fetch extra data from eventum
+    function query($data) {
         static $client = null;
         static $eventum_url;
         if (!$client) {
@@ -111,33 +95,123 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             // and link to eventum
             $eventum_url = $c['url'] . '/view.php?id=';
         }
-        $url = $eventum_url . $data['id'];
+        $data['url'] = $eventum_url . $data['id'];
 
         try {
-            $details = $client->getIssueDetails((int )$data['id']);
+            $data['details'] = $client->getIssueDetails((int )$data['id']);
+
         } catch (Eventum_RPC_Exception $e) {
-            $renderer->doc .= $link;
-            $renderer->doc .= ' <i style="color:red">'.$e->getMessage().'</i>';
+            $data['error'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
+    /**
+     * Create output
+     */
+    function render($format, &$renderer, $data) {
+        global $ID;
+
+        // fetch extra data from eventum
+        $data = $this->query($data);
+
+        // link title
+        $link = 'issue #'. $data['id'];
+
+        if ($data['error']) {
+            if ($format == 'xhtml') {
+                $renderer->doc .= $link;
+                $renderer->doc .= ': <i style="color:red">'.$data['error'].'</i>';
+            } else {
+                $renderer->cdata($data['error']);
+            }
             return;
         }
 
-        if ($details['sta_is_closed']) {
-            $renderer->doc .= '<strike>';
+        if (empty($data['title'])) {
+            $data['title'] = $data['details']['iss_summary'];
         }
-        $renderer->doc .= '<a class="interwiki iw_issue" href="'.$url.'" target="_blank" title="'.$details['iss_summary'].'">'.$link.'</a>';
-        if (!is_null($title)) {
-            $renderer->doc .= ': '.$title;
-        } elseif ($details['iss_summary']) {
-            $renderer->doc .= ': '.hsc($details['iss_summary']);
-        }
-        if ($details['sta_title']) {
-            $renderer->doc .= ' <i>('.$details['sta_title'].')</i>';
-        }
-        if ($details['sta_is_closed']) {
-            $renderer->doc .= '</strike>';
+
+        if ($format == 'xhtml' || $format == 'odt') {
+            $html = '';
+            $html .= $this->link($format, $data['url'], $link, $data['details']['iss_summary']);
+            $html .= ': '. hsc($data['title']);
+
+            if ($data['details']['sta_title']) {
+                $html .= ' '. $this->emphasis($format, '('.$data['details']['sta_title'].')');
+            }
+
+            if ($data['details']['sta_is_closed']) {
+                $html = $this->strike($format, $html);
+            }
+
+            $renderer->doc .= $this->html($format, $html);
+
+        } elseif ($format == 'odt') {
+            $renderer->externallink($data['url'], $link);
+            $renderer->cdata(': '.$data['title']);
         }
 
         return true;
+    }
+
+    /** odt/html export helpers, partly ripped from odt plugin */
+    function _xmlEntities($value) {
+        return str_replace( array('&','"',"'",'<','>'), array('&#38;','&#34;','&#39;','&#60;','&#62;'), $value);
+    }
+
+    function strike($format, $text) {
+        $doc = '';
+        if ($format == 'xhtml') {
+            $doc .= '<strike>';
+            $doc .= $text;
+            $doc .= '</strike>';
+        } elseif ($format == 'odt') {
+            $doc .= '<text:span text:style-name="del">';
+            $doc .= $text;
+            $doc .= '</text:span>';
+        }
+        return $doc;
+    }
+
+    function emphasis($format, $text) {
+        if ($format == 'xhtml') {
+            $doc .= '<i>';
+            $doc .= $text;
+            $doc .= '</i>';
+        } elseif ($format == 'odt') {
+            $doc .= '<text:span text:style-name="Emphasis">';
+            $doc .= $text;
+            $doc .= '</text:span>';
+        }
+        return $doc;
+    }
+
+    function html($format, $text) {
+        $doc = '';
+        if ($format == 'xhtml') {
+            $doc .= $text;
+        } elseif ($format == 'odt') {
+            $doc .= '<text:span>';
+            $doc .= $text;
+            $doc .= '</text:span>';
+        }
+        return $doc;
+    }
+
+    function link($format, $url, $name, $title) {
+        $doc = '';
+        if ($format == 'xhtml') {
+            $doc .= '<a class="interwiki iw_issue" href="'.$url.'" target="_blank" title="'.$title.'">'.hsc($name).'</a>';
+
+        } elseif ($format == 'odt') {
+            $url = $this->_xmlEntities($url);
+            $doc .= '<text:a xlink:type="simple" xlink:href="'.$url.'">';
+            $doc .= $name; // we get the name already XML encoded
+            $doc .= '</text:a>';
+        }
+        return $doc;
     }
 }
 
