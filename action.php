@@ -24,7 +24,7 @@ class action_plugin_eventum extends DokuWiki_Action_Plugin {
       return array(
         'author' => 'Elan Ruusamäe',
         'email'  => 'glen@delfi.ee',
-        'date'   => '2009-02-02',
+        'date'   => '2010-09-27',
         'name'   => 'Eventum Plugin',
         'desc'   => 'Eventum addons plugin',
         'url'    => 'https://cvs.delfi.ee/dokuwiki/plugin/eventum/',
