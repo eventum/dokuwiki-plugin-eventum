@@ -78,14 +78,56 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         return $data;
     }
 
+    function cache($id, $data = null) {
+        global $conf;
+        $cachefile = $conf['cachedir'].'/eventum.cache';
+
+        // mode: get but no cachefile
+        if ($data === null && !file_exists($cachefile)) {
+            return null;
+        }
+
+        // read cache
+        $cache = array();
+        if (file_exists($cachefile)) {
+            $cache = unserialize(file_get_contents($cachefile));
+        }
+
+        // expire as long as page edit time to make page edit smooth but still
+        // have almost accurate data.
+        $mtime = time() - $conf['locktime'];
+        foreach ($cache as $i => $ent) {
+            if ($ent['mtime'] < $mtime) {
+                unset($cache[$i]);
+            }
+        }
+
+        // mode get:
+        if ($data === null) {
+            return isset($cache[$id]) ? $cache[$id] : null;
+        }
+
+        // mode: set
+        $cache[$id] = $data;
+        file_put_contents($cachefile, serialize($cache));
+        return true;
+    }
+
     /**
      * Query extra data from Eventum server
      */
     function query($data) {
+        $cache = $this->cache($data['id']);
+        if ($cache !== null) {
+            return $cache;
+        }
+
         static $client = null;
         static $eventum_url;
+
         if (!$client) {
             global $conf;
+
             // get plugin config
             $c = $conf['plugin']['eventum'];
             $client = new Eventum_RPC();
@@ -103,6 +145,9 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
         }
+
+        $data['mtime'] = time();
+        $this->cache($data['id'], $data);
 
         return $data;
     }
