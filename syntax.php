@@ -29,20 +29,6 @@ $conf['plugin']['eventum']['password'] = 'admin';
 class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
     /**
-     * return some info
-     */
-    function getInfo() {
-      return array(
-        'author' => 'Elan Ruusamäe',
-        'email'  => 'glen@delfi.ee',
-        'date'   => rtrim(io_readFile(DOKU_PLUGIN.'eventum/VERSION')),
-        'name'   => 'Eventum Plugin',
-        'desc'   => 'Eventum addons plugin',
-        'url'    => 'https://cvs.delfi.ee/dokuwiki/plugin/eventum/',
-      );
-    }
-
-    /**
      * What kind of syntax are we?
      */
     function getType() {

@@ -1,0 +1,7 @@
+base   eventum
+author Elan Ruusamäe
+email  glen@delfi.ee
+date   2010-09-28
+name   Eventum Plugin
+desc   Makes links to Eventum Issue Tracker
+url    https://cvs.delfi.ee/dokuwiki/plugin/eventum/
