@@ -100,10 +100,10 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     }
 
     /**
-     * Query extra data from Eventum server
+     * Query data from Eventum server
      */
-    function query($data) {
-        $cache = $this->cache($data['id']);
+    function query($id) {
+        $cache = $this->cache($id);
         if ($cache !== null) {
             return $cache;
         }
@@ -123,17 +123,18 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             // and link to eventum
             $eventum_url = $c['url'] . '/view.php?id=';
         }
-        $data['url'] = $eventum_url . $data['id'];
+        $data['url'] = $eventum_url . $id;
 
         try {
-            $data['details'] = $client->getIssueDetails((int )$data['id']);
+            $data['details'] = $client->getIssueDetails((int )$id);
 
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
         }
 
+        $data['id'] = $id;
         $data['mtime'] = time();
-        $this->cache($data['id'], $data);
+        $this->cache($id, $data);
 
         return $data;
     }
@@ -145,7 +146,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         global $ID;
 
         // fetch extra data from eventum
-        $data = $this->query($data);
+        $data += $this->query($data['id']);
 
         // link title
         $link = 'issue #'. $data['id'];
