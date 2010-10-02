@@ -58,7 +58,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
     function cache($id, $data = null) {
         global $conf;
-        $cachefile = $conf['cachedir'].'/eventum.cache';
+        $cachefile = $conf['cachedir'].'/'.$this->getPluginName().'.cache';
 
         // mode: get but no cachefile
         if ($data === null && !file_exists($cachefile)) {
