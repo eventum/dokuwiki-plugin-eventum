@@ -104,16 +104,13 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         static $eventum_url;
 
         if (!$client) {
-            global $conf;
-
-            // get plugin config
-            $c = $conf['plugin']['eventum'];
+            // setup rpc object
             $client = new Eventum_RPC();
-            $client->setCredentials($c['username'], $c['password']);
-            $client->setURL($c['url']);
+            $client->setCredentials($this->getConf('username'), $this->getConf('password'));
+            $client->setURL($this->getConf('url'));
 
             // and link to eventum
-            $eventum_url = $c['url'] . '/view.php?id=';
+            $eventum_url = $this->getConf('url') . '/view.php?id=';
         }
         $data['url'] = $eventum_url . $id;
 
