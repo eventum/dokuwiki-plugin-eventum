@@ -19,6 +19,14 @@ require_once 'class.Eventum_RPC.php';
  * need to inherit from this class
  */
 class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
+    /*
+     * keys that we use for caching, to avoid running out of memory when serializing
+     */
+    static $cache_keys = array(
+        'iss_summary',
+        'sta_title',
+        'sta_is_closed',
+    );
 
     /**
      * What kind of syntax are we?
@@ -91,6 +99,20 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         return true;
     }
 
+    /*
+     * combine unequal array to new one, taking $keys from first array and
+     * values by same key from second array
+     *
+     * i'd used array_conbine, but that does not support arrays with keys.
+     */
+    function filter_keys($keys, $data) {
+        $res = array();
+        foreach ($keys as $key) {
+            $res[$key] = $data[$key];
+        }
+        return $res;
+    }
+
     /**
      * Query data from Eventum server
      */
@@ -115,7 +137,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         $data['url'] = $eventum_url . $id;
 
         try {
-            $data['details'] = $client->getIssueDetails((int )$id);
+            $data['details'] = self::filter_keys(self::$cache_keys, $client->getIssueDetails((int )$id));
 
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
