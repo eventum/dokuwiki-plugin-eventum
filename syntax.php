@@ -60,7 +60,13 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         // extract id
         list($id, $attrs) = explode('&', $match, 2);
 
-        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs, 'title' => trim($title));
+        $data = array('raw' => $raw, 'id' => $id, 'attrs' => $attrs);
+
+        // set title only when specified to be able to make difference between empty and unset
+        if ($title !== null) {
+            $data['title'] = trim($title);
+        }
+
         return $data;
     }
 
@@ -172,14 +178,16 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             return;
         }
 
-        if (empty($data['title'])) {
+        if (!isset($data['title'])) {
             $data['title'] = $data['details']['iss_summary'];
         }
 
         if ($format == 'xhtml' || $format == 'odt') {
             $html = '';
             $html .= $this->link($format, $data['url'], $link, $data['details']['iss_summary']);
-            $html .= ': '. hsc($data['title']);
+            if ($data['title']) {
+                $html .= ': '. hsc($data['title']);
+            }
 
             if ($data['details']['sta_title']) {
                 $html .= ' '. $this->emphasis($format, '('.$data['details']['sta_title'].')');
