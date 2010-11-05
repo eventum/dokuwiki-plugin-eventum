@@ -254,7 +254,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     function link($format, $url, $name, $title) {
         $doc = '';
         if ($format == 'xhtml') {
-            $doc .= '<a class="interwiki iw_issue" href="'.$url.'" target="_blank" title="'.$title.'">'.hsc($name).'</a>';
+            $doc .= '<a class="iw_eventum" href="'.$url.'" target="_blank" title="'.$title.'">'.hsc($name).'</a>';
 
         } elseif ($format == 'odt') {
             $url = $this->_xmlEntities($url);
