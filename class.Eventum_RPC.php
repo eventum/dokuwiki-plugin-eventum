@@ -63,6 +63,9 @@ class Eventum_RPC {
         if (!isset($data['port'])) {
             $data['port'] = $data['scheme'] == 'https' ? 443 : 80;
         }
+        if (!isset($data['path'])) {
+            $data['path'] = '';
+        }
         $data['path'] .= '/rpc/xmlrpc.php';
 
         $this->client = new XML_RPC_Client($data['path'], $data['host'], $data['port']);
@@ -91,10 +94,10 @@ class Eventum_RPC {
         $client = $this->getClient();
         $result = $client->send($msg);
 
-        if ($result == 0) {
+        if ($result === 0) {
             throw new Eventum_RPC_Exception($client->errstr);
         }
-        if ($result->faultCode()) {
+        if (is_object($result) && $result->faultCode()) {
             throw new Eventum_RPC_Exception($result->faultString());
         }
 
