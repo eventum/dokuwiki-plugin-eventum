@@ -31,7 +31,7 @@ class action_plugin_eventum extends DokuWiki_Action_Plugin {
         $event->data[] = array(
             'type' => 'format',
             'title' => $this->getLang('btn_issue'),
-            'icon' => '../../images/interwiki/issue.gif',
+            'icon' => '../../plugins/eventum/images/eventum.gif',
             'open' => '[[issue>',
             'close' => ']]',
             'key'    => 'e',
