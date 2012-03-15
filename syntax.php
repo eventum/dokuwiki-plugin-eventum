@@ -109,7 +109,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * combine unequal array to new one, taking $keys from first array and
      * values by same key from second array
      *
-     * i'd used array_conbine, but that does not support arrays with keys.
+     * i'd used array_combine, but that does not support arrays with keys.
      */
     function filter_keys($keys, $data) {
         $res = array();
