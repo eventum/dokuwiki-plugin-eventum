@@ -4,3 +4,5 @@
 *.orig
 *~
 *.patch
+/vendor/
+/composer.lock

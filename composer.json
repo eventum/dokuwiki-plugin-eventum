@@ -1,0 +1,13 @@
+{
+	"name": "eventum/dokuwiki-plugin",
+	"authors": [
+		{
+			"name": "Elan Ruusamäe",
+			"email": "glen@delfi.ee"
+		}
+	],
+	"require": {
+		"ext-date": "*",
+		"php": ">=5.0.0"
+	}
+}
