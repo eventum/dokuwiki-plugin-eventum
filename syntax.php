@@ -10,8 +10,13 @@
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();
 
-require_once 'XML/RPC.php';
-require_once 'class.Eventum_RPC.php';
+if (file_exists($autoload = __DIR__. '/vendor/autoload.php')) {
+    require_once $autoload;
+} else {
+    // try from include path
+    require_once 'XML/RPC.php';
+    require_once 'class.Eventum_RPC.php';
+}
 
 /**
  * All DokuWiki plugins to extend the parser/rendering mechanism
@@ -53,7 +58,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * Handle the match
      */
     function handle($match, $state, $pos, &$handler) {
-		$raw = $match = substr($match, 8, -2);
+        $raw = $match = substr($match, 8, -2);
         // extract title
         list($match, $title) = explode('|', $match, 2);
         // extract id
