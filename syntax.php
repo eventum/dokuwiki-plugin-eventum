@@ -12,6 +12,8 @@ if(!defined('DOKU_INC')) die();
 
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
+
+require_once 'XML/RPC.php';
 require_once 'class.Eventum_RPC.php';
 
 /**
@@ -123,21 +125,24 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * Query data from Eventum server
      */
     function query($id) {
+        global $conf;
+
         $cache = $this->cache($id);
         if ($cache !== null) {
             return $cache;
         }
 
         static $client = null;
-        static $eventum_url;
+        static $eventum_url, $rpc_url;
 
         if (!$client) {
-            // setup rpc object
-            $client = new Eventum_RPC();
+            // setup RPC object
+            $rpc_url = $this->getConf('url') . '/rpc/xmlrpc.php';
+            $client = new Eventum_RPC($rpc_url);
             $client->setCredentials($this->getConf('username'), $this->getConf('password'));
-            $client->setURL($this->getConf('url'));
+            //$client->setDebug(1);
 
-            // and link to eventum
+            // Issue link
             $eventum_url = $this->getConf('url') . '/view.php?id=';
         }
         $data['url'] = $eventum_url . $id;
@@ -147,6 +152,10 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
+
+            if ($conf['allowdebug']) {
+                $data['rpcurl'] = $rpc_url;
+            }
         }
 
         $data['id'] = $id;
@@ -172,6 +181,9 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             if ($format == 'xhtml') {
                 $renderer->doc .= $link;
                 $renderer->doc .= ': <i style="color:red">'.$data['error'].'</i>';
+                if (isset($data['rpcurl'])) {
+                    $renderer->doc .= " <tt>RPC URL: {$data['rpcurl']}</tt>";
+                }
             } else {
                 $renderer->cdata($data['error']);
             }
