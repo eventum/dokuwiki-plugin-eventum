@@ -6,7 +6,14 @@
 			"email": "glen@delfi.ee"
 		}
 	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://raw.githubusercontent.com/eventum/composer/repo/"
+		}
+	],
 	"require": {
+		"eventum/rpc": "~3.0.0",
 		"ext-date": "*",
 		"php": ">=5.0.0"
 	}
