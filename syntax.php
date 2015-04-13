@@ -27,9 +27,9 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * keys that we use for caching, to avoid running out of memory when serializing
      */
     static $cache_keys = array(
-        'iss_summary',
-        'sta_title',
-        'sta_is_closed',
+        'iss_summary' => 'summary',
+        'sta_title' => 'status',
+        'sta_is_closed' => 'is_closed',
     );
 
     /**
@@ -110,15 +110,22 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     }
 
     /*
-     * combine unequal array to new one, taking $keys from first array and
-     * values by same key from second array
-     *
-     * i'd used array_combine, but that does not support arrays with keys.
+     * combine keys from $data array to new one.
+     * rename keys to be named as $value says.
      */
     function filter_keys($keys, $data) {
         $res = array();
-        foreach ($keys as $key) {
-            $res[$key] = $data[$key];
+        foreach ($keys as $key => $value) {
+            // remap old key to new one
+            if (isset($data[$key])) {
+                $res[$value] = $data[$key];
+                continue;
+            }
+            // use already existing new name
+            if (isset($data[$value])) {
+                $res[$value] = $data[$value];
+                continue;
+            }
         }
         return $res;
     }
@@ -150,7 +157,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         $data['url'] = $eventum_url . $id;
 
         try {
-            $data['details'] = self::filter_keys(self::$cache_keys, $client->getIssueDetails((int )$id));
+            $data['details'] = self::filter_keys(self::$cache_keys, $client->getSimpleIssueDetails((int )$id));
 
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
@@ -193,21 +200,21 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         }
 
         if (!isset($data['title'])) {
-            $data['title'] = $data['details']['iss_summary'];
+            $data['title'] = $data['details']['summary'];
         }
 
         if ($format == 'xhtml' || $format == 'odt') {
             $html = '';
-            $html .= $this->link($format, $data['url'], $link, $data['details']['iss_summary']);
+            $html .= $this->link($format, $data['url'], $link, $data['details']['summary']);
             if ($data['title']) {
                 $html .= ': '. hsc($data['title']);
             }
 
-            if ($data['details']['sta_title']) {
-                $html .= ' '. $this->emphasis($format, '('.$data['details']['sta_title'].')');
+            if ($data['details']['status']) {
+                $html .= ' '. $this->emphasis($format, '('.$data['details']['status'].')');
             }
 
-            if ($data['details']['sta_is_closed']) {
+            if ($data['details']['is_closed']) {
                 $html = $this->strike($format, $html);
             }
 
