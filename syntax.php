@@ -57,7 +57,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, &$handler) {
+    function handle($match, $state, $pos, Doku_Handler $handler) {
         $raw = $match = substr($match, 8, -2);
         // extract title
         list($match, $title) = explode('|', $match, 2);
@@ -177,7 +177,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($format, &$renderer, $data) {
+    function render($format, Doku_Renderer $renderer, $data) {
         global $ID;
 
         // fetch extra data from eventum
