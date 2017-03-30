@@ -4,7 +4,7 @@ Makes links to Eventum Issue Tracker, Quering issue info from Eventum via XMLRPC
 
 ## Download and Installation
 
-[Download] and install the plugin using the [Plugin Manager] using the `.zip` URL.
+[Download] and install the plugin using the [Plugin Manager] using the `eventum-YYYY-MM-DD.tar.gz` URL.
 Refer to [Plugins] on how to install plugins manually.
 
 Configure Plugin settings via [Configuration Manager] (or modify `conf/local.php` yourself):
