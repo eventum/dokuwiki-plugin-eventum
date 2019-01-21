@@ -184,7 +184,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         $data += $this->query($data['id']);
 
         // link title
-        $link = 'issue #'. $data['id'];
+        $link = sprintf($this->getLang('issue'), $data['id']);
 
         if ($data['error']) {
             if ($format == 'xhtml') {
