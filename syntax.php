@@ -206,7 +206,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
                 $renderer->cdata($data['error']);
             }
 
-            return;
+            return '';
         }
 
         if (!isset($data['title'])) {
