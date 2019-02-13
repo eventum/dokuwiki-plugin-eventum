@@ -2,7 +2,7 @@
 /**
  * Options for the Eventum Plugin
  */
-$conf['url']      = '';
+$conf['url'] = '';
 $conf['username'] = '';
 $conf['password'] = '';
 

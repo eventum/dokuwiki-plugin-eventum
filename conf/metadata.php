@@ -5,7 +5,7 @@
  *
  * @author     Elan Ruusamäe <glen@delfi.ee>
  */
-$meta['url']      = array('string', '_pattern' => '{^(?:$|https?://\S+$)}i');
+$meta['url'] = array('string', '_pattern' => '{^(?:$|https?://\S+$)}i');
 $meta['username'] = array('string');
 $meta['password'] = array('password');
 
