@@ -213,7 +213,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
             $data['title'] = $data['details']['summary'];
         }
 
-        if ($format === 'xhtml' || $format === 'odt') {
+        if ($format === 'xhtml') {
             $html = '';
             $html .= $this->link($format, $data['url'], $link, $data['details']['summary']);
             if ($data['title']) {
