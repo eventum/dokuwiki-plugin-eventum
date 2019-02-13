@@ -189,8 +189,6 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
      */
     public function render($format, Doku_Renderer $renderer, $data)
     {
-        global $ID;
-
         // fetch extra data from eventum
         $data += $this->query($data['id']);
 
