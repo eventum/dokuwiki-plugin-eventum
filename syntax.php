@@ -164,7 +164,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         $data['url'] = $eventum_url . $id;
 
         try {
-            $data['details'] = self::filter_keys(self::$cache_keys, $client->getSimpleIssueDetails((int )$id));
+            $data['details'] = $this->filter_keys(self::$cache_keys, $client->getSimpleIssueDetails((int )$id));
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
 
