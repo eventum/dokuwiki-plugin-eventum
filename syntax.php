@@ -5,7 +5,7 @@
  * interpret eventum issue tags in DokuWiki
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Elan Ruusamäe <glen@delfi.ee>
+ * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
 // must be run within Dokuwiki
 if(!defined('DOKU_INC')) die();

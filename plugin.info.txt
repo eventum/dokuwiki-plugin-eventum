@@ -1,6 +1,6 @@
 base   eventum
 author Elan Ruusamäe
-email  glen@delfi.ee
+email  glen@pld-linux.org
 date   2016-08-18
 name   Eventum Plugin
 desc   Makes links to Eventum Issue Tracker

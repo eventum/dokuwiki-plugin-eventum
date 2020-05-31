@@ -3,7 +3,7 @@
  * English language file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Elan Ruusamäe <glen@delfi.ee>
+ * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
 
 // custom language strings for the plugin

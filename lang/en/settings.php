@@ -2,7 +2,7 @@
 /**
  * English language file
  *
- * @author     Elan Ruusamäe <glen@delfi.ee>
+ * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
 
 // for the configuration manager
