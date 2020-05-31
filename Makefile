@@ -6,7 +6,7 @@ dist:
 	set -ex; \
 	version=`awk '/date/{print $$2}' plugin.info.txt`; \
 	package_dir=$(package_name)-$$version; \
-	composer install --ignore-platform-reqs --no-dev; \
+	composer install --no-dev; \
 	rm -rf $(package_name); \
 	install -d $(package_name)/XML; \
 	git archive HEAD | tar -x -C $(package_name); \
