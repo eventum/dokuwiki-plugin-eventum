@@ -7,8 +7,6 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
-// must be run within Dokuwiki
-if(!defined('DOKU_INC')) die();
 
 if (file_exists($autoload = __DIR__. '/vendor/autoload.php')) {
     require_once $autoload;

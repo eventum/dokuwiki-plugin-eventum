@@ -7,7 +7,6 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
-if(!defined('DOKU_INC')) die();  // no Dokuwiki, no go
 
 /**
  * All DokuWiki plugins to extend the parser/rendering mechanism
