@@ -17,7 +17,7 @@ class action_plugin_eventum extends DokuWiki_Action_Plugin
     /**
      * plugin should use this method to register its handlers with the dokuwiki's event controller
      */
-    function register(Doku_Event_Handler $controller)
+    public function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'insert_button');
     }
@@ -25,7 +25,7 @@ class action_plugin_eventum extends DokuWiki_Action_Plugin
     /**
      * Inserts a toolbar button
      */
-    function insert_button(&$event)
+    public function insert_button(&$event)
     {
         $event->data[] = array(
             'type' => 'format',

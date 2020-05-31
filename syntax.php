@@ -25,7 +25,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /*
      * keys that we use for caching, to avoid running out of memory when serializing
      */
-    static $cache_keys = array(
+    private static $cache_keys = array(
         'iss_summary' => 'summary',
         'sta_title' => 'status',
         'sta_is_closed' => 'is_closed',
@@ -34,7 +34,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * What kind of syntax are we?
      */
-    function getType()
+    public function getType()
     {
         return 'substition';
     }
@@ -42,7 +42,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * Where to sort in?
      */
-    function getSort()
+    public function getSort()
     {
         return 290;
     }
@@ -50,7 +50,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * Connect pattern to lexer
      */
-    function connectTo($mode)
+    public function connectTo($mode)
     {
         $this->Lexer->addSpecialPattern('\[\[issue>.+?\]\]', $mode, 'plugin_eventum');
     }
@@ -58,7 +58,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, Doku_Handler $handler)
+    public function handle($match, $state, $pos, Doku_Handler $handler)
     {
         $raw = $match = substr($match, 8, -2);
         // extract title
@@ -76,7 +76,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         return $data;
     }
 
-    function cache($id, $data = null)
+    private function cache($id, $data = null)
     {
         global $conf;
         $cachefile = $conf['cachedir'] . '/' . $this->getPluginName() . '.cache';
@@ -117,7 +117,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
      * combine keys from $data array to new one.
      * rename keys to be named as $value says.
      */
-    function filter_keys($keys, $data)
+    private function filter_keys($keys, $data)
     {
         $res = array();
         foreach ($keys as $key => $value) {
@@ -139,7 +139,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * Query data from Eventum server
      */
-    function query($id)
+    private function query($id)
     {
         global $conf;
 
@@ -183,7 +183,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     /**
      * Create output
      */
-    function render($format, Doku_Renderer $renderer, $data)
+    public function render($format, Doku_Renderer $renderer, $data)
     {
         global $ID;
 
@@ -236,12 +236,12 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
     }
 
     /** odt/html export helpers, partly ripped from odt plugin */
-    function _xmlEntities($value)
+    private function xmlEntities($value)
     {
         return str_replace(array('&', '"', "'", '<', '>'), array('&#38;', '&#34;', '&#39;', '&#60;', '&#62;'), $value);
     }
 
-    function strike($format, $text)
+    private function strike($format, $text)
     {
         $doc = '';
         if ($format === 'xhtml') {
@@ -257,7 +257,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         return $doc;
     }
 
-    function emphasis($format, $text)
+    private function emphasis($format, $text)
     {
         if ($format === 'xhtml') {
             $doc .= '<i>';
@@ -272,7 +272,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         return $doc;
     }
 
-    function html($format, $text)
+    private function html($format, $text)
     {
         $doc = '';
         if ($format === 'xhtml') {
@@ -286,13 +286,13 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         return $doc;
     }
 
-    function link($format, $url, $name, $title)
+    private function link($format, $url, $name, $title)
     {
         $doc = '';
         if ($format === 'xhtml') {
             $doc .= '<a class="iw_eventum" href="' . $url . '" target="_blank" title="' . $title . '">' . hsc($name) . '</a>';
         } elseif ($format === 'odt') {
-            $url = $this->_xmlEntities($url);
+            $url = $this->xmlEntities($url);
             $doc .= '<text:a xlink:type="simple" xlink:href="' . $url . '">';
             $doc .= $name; // we get the name already XML encoded
             $doc .= '</text:a>';
