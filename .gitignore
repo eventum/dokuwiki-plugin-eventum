@@ -7,3 +7,4 @@
 /.idea/
 /composer.lock
 /vendor/
+/eventum-*.tar.gz
