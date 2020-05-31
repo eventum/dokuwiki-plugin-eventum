@@ -12,9 +12,15 @@
 			"url": "https://eventum.github.io/composer/"
 		}
 	],
+	"config": {
+		"platform": {
+			"php": "5.3.29"
+		},
+		"sort-packages": true
+	},
 	"require": {
-		"eventum/rpc": "~3.0.0",
+		"php": "^5.3.0 || ^7.0",
 		"ext-date": "*",
-		"php": ">=5.3.0"
+		"eventum/rpc": "^3"
 	}
 }
