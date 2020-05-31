@@ -7,7 +7,7 @@
  */
 
 // custom language strings for the plugin
-$lang['btn_issue']   = 'Vložit odkaz na úlohu';
-$lang['issue']   = 'úloha #%s';
+$lang['btn_issue'] = 'Vložit odkaz na úlohu';
+$lang['issue'] = 'úloha #%s';
 
 //Setup VIM: ex: et ts=2 enc=utf-8 :

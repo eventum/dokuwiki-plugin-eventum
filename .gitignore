@@ -1,8 +1,9 @@
-*.swp
 *.bak
 *.old
 *.orig
-*~
 *.patch
-/vendor/
+*.swp
+*~
+/.idea/
 /composer.lock
+/vendor/

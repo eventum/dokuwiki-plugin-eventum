@@ -3,9 +3,9 @@
  * Metadata for configuration manager plugin
  * Additions for the Eventum plugin
  *
- * @author     Elan Ruusamäe <glen@delfi.ee>
+ * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
-$meta['url']      = array('string', '_pattern' => '{^(?:$|https?://\S+$)}i');
+$meta['url'] = array('string', '_pattern' => '{^(?:$|https?://\S+$)}i');
 $meta['username'] = array('string');
 $meta['password'] = array('password');
 
