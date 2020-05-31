@@ -227,9 +227,6 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
             }
 
             $renderer->doc .= $this->html($format, $html);
-        } elseif ($format === 'odt') {
-            $renderer->externallink($data['url'], $link);
-            $renderer->cdata(': ' . $data['title']);
         }
 
         return true;
