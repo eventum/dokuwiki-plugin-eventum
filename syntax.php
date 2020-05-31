@@ -141,8 +141,6 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
      */
     private function query($id)
     {
-        global $conf;
-
         $cache = $this->cache($id);
         if ($cache !== null) {
             return $cache;
@@ -168,6 +166,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
 
+            global $conf;
             if ($conf['allowdebug']) {
                 $data['rpcurl'] = $rpc_url;
             }
