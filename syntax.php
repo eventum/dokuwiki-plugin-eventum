@@ -8,7 +8,7 @@
  * @author     Elan Ruusamäe <glen@pld-linux.org>
  */
 
-if (file_exists($autoload = __DIR__. '/vendor/autoload.php')) {
+if (file_exists($autoload = __DIR__ . '/vendor/autoload.php')) {
     require_once $autoload;
 } else {
     // try from include path
@@ -20,7 +20,8 @@ if (file_exists($autoload = __DIR__. '/vendor/autoload.php')) {
  * All DokuWiki plugins to extend the parser/rendering mechanism
  * need to inherit from this class
  */
-class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
+{
     /*
      * keys that we use for caching, to avoid running out of memory when serializing
      */
@@ -33,29 +34,32 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     /**
      * What kind of syntax are we?
      */
-    function getType() {
+    function getType()
+    {
         return 'substition';
     }
 
     /**
      * Where to sort in?
      */
-    function getSort() {
+    function getSort()
+    {
         return 290;
     }
 
     /**
      * Connect pattern to lexer
      */
-    function connectTo($mode) {
+    function connectTo($mode)
+    {
         $this->Lexer->addSpecialPattern('\[\[issue>.+?\]\]', $mode, 'plugin_eventum');
     }
-
 
     /**
      * Handle the match
      */
-    function handle($match, $state, $pos, Doku_Handler $handler) {
+    function handle($match, $state, $pos, Doku_Handler $handler)
+    {
         $raw = $match = substr($match, 8, -2);
         // extract title
         list($match, $title) = explode('|', $match, 2);
@@ -72,9 +76,10 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         return $data;
     }
 
-    function cache($id, $data = null) {
+    function cache($id, $data = null)
+    {
         global $conf;
-        $cachefile = $conf['cachedir'].'/'.$this->getPluginName().'.cache';
+        $cachefile = $conf['cachedir'] . '/' . $this->getPluginName() . '.cache';
 
         // mode: get but no cachefile
         if ($data === null && !file_exists($cachefile)) {
@@ -104,6 +109,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         // mode: set
         $cache[$id] = $data;
         file_put_contents($cachefile, serialize($cache));
+
         return true;
     }
 
@@ -111,7 +117,8 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
      * combine keys from $data array to new one.
      * rename keys to be named as $value says.
      */
-    function filter_keys($keys, $data) {
+    function filter_keys($keys, $data)
+    {
         $res = array();
         foreach ($keys as $key => $value) {
             // remap old key to new one
@@ -125,13 +132,15 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
                 continue;
             }
         }
+
         return $res;
     }
 
     /**
      * Query data from Eventum server
      */
-    function query($id) {
+    function query($id)
+    {
         global $conf;
 
         $cache = $this->cache($id);
@@ -156,7 +165,6 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
         try {
             $data['details'] = self::filter_keys(self::$cache_keys, $client->getSimpleIssueDetails((int )$id));
-
         } catch (Eventum_RPC_Exception $e) {
             $data['error'] = $e->getMessage();
 
@@ -175,7 +183,8 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     /**
      * Create output
      */
-    function render($format, Doku_Renderer $renderer, $data) {
+    function render($format, Doku_Renderer $renderer, $data)
+    {
         global $ID;
 
         // fetch extra data from eventum
@@ -187,13 +196,14 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         if ($data['error']) {
             if ($format === 'xhtml') {
                 $renderer->doc .= $link;
-                $renderer->doc .= ': <i style="color:red">'.$data['error'].'</i>';
+                $renderer->doc .= ': <i style="color:red">' . $data['error'] . '</i>';
                 if (isset($data['rpcurl'])) {
                     $renderer->doc .= " <tt>RPC URL: {$data['rpcurl']}</tt>";
                 }
             } else {
                 $renderer->cdata($data['error']);
             }
+
             return;
         }
 
@@ -205,11 +215,11 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $html = '';
             $html .= $this->link($format, $data['url'], $link, $data['details']['summary']);
             if ($data['title']) {
-                $html .= ': '. hsc($data['title']);
+                $html .= ': ' . hsc($data['title']);
             }
 
             if ($data['details']['status']) {
-                $html .= ' '. $this->emphasis($format, '('.$data['details']['status'].')');
+                $html .= ' ' . $this->emphasis($format, '(' . $data['details']['status'] . ')');
             }
 
             if ($data['details']['is_closed']) {
@@ -217,21 +227,22 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             }
 
             $renderer->doc .= $this->html($format, $html);
-
         } elseif ($format === 'odt') {
             $renderer->externallink($data['url'], $link);
-            $renderer->cdata(': '.$data['title']);
+            $renderer->cdata(': ' . $data['title']);
         }
 
         return true;
     }
 
     /** odt/html export helpers, partly ripped from odt plugin */
-    function _xmlEntities($value) {
-        return str_replace( array('&','"',"'",'<','>'), array('&#38;','&#34;','&#39;','&#60;','&#62;'), $value);
+    function _xmlEntities($value)
+    {
+        return str_replace(array('&', '"', "'", '<', '>'), array('&#38;', '&#34;', '&#39;', '&#60;', '&#62;'), $value);
     }
 
-    function strike($format, $text) {
+    function strike($format, $text)
+    {
         $doc = '';
         if ($format === 'xhtml') {
             $doc .= '<strike>';
@@ -242,10 +253,12 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $doc .= $text;
             $doc .= '</text:span>';
         }
+
         return $doc;
     }
 
-    function emphasis($format, $text) {
+    function emphasis($format, $text)
+    {
         if ($format === 'xhtml') {
             $doc .= '<i>';
             $doc .= $text;
@@ -255,10 +268,12 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $doc .= $text;
             $doc .= '</text:span>';
         }
+
         return $doc;
     }
 
-    function html($format, $text) {
+    function html($format, $text)
+    {
         $doc = '';
         if ($format === 'xhtml') {
             $doc .= $text;
@@ -267,20 +282,22 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $doc .= $text;
             $doc .= '</text:span>';
         }
+
         return $doc;
     }
 
-    function link($format, $url, $name, $title) {
+    function link($format, $url, $name, $title)
+    {
         $doc = '';
         if ($format === 'xhtml') {
-            $doc .= '<a class="iw_eventum" href="'.$url.'" target="_blank" title="'.$title.'">'.hsc($name).'</a>';
-
+            $doc .= '<a class="iw_eventum" href="' . $url . '" target="_blank" title="' . $title . '">' . hsc($name) . '</a>';
         } elseif ($format === 'odt') {
             $url = $this->_xmlEntities($url);
-            $doc .= '<text:a xlink:type="simple" xlink:href="'.$url.'">';
+            $doc .= '<text:a xlink:type="simple" xlink:href="' . $url . '">';
             $doc .= $name; // we get the name already XML encoded
             $doc .= '</text:a>';
         }
+
         return $doc;
     }
 }
