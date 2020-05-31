@@ -187,7 +187,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
         $link = sprintf($this->getLang('issue'), $data['id']);
 
         if ($data['error']) {
-            if ($format == 'xhtml') {
+            if ($format === 'xhtml') {
                 $renderer->doc .= $link;
                 $renderer->doc .= ': <i style="color:red">'.$data['error'].'</i>';
                 if (isset($data['rpcurl'])) {
@@ -203,7 +203,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
             $data['title'] = $data['details']['summary'];
         }
 
-        if ($format == 'xhtml' || $format == 'odt') {
+        if ($format === 'xhtml' || $format === 'odt') {
             $html = '';
             $html .= $this->link($format, $data['url'], $link, $data['details']['summary']);
             if ($data['title']) {
@@ -220,7 +220,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
             $renderer->doc .= $this->html($format, $html);
 
-        } elseif ($format == 'odt') {
+        } elseif ($format === 'odt') {
             $renderer->externallink($data['url'], $link);
             $renderer->cdata(': '.$data['title']);
         }
@@ -235,11 +235,11 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
     function strike($format, $text) {
         $doc = '';
-        if ($format == 'xhtml') {
+        if ($format === 'xhtml') {
             $doc .= '<strike>';
             $doc .= $text;
             $doc .= '</strike>';
-        } elseif ($format == 'odt') {
+        } elseif ($format === 'odt') {
             $doc .= '<text:span text:style-name="del">';
             $doc .= $text;
             $doc .= '</text:span>';
@@ -248,11 +248,11 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
     }
 
     function emphasis($format, $text) {
-        if ($format == 'xhtml') {
+        if ($format === 'xhtml') {
             $doc .= '<i>';
             $doc .= $text;
             $doc .= '</i>';
-        } elseif ($format == 'odt') {
+        } elseif ($format === 'odt') {
             $doc .= '<text:span text:style-name="Emphasis">';
             $doc .= $text;
             $doc .= '</text:span>';
@@ -262,9 +262,9 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
     function html($format, $text) {
         $doc = '';
-        if ($format == 'xhtml') {
+        if ($format === 'xhtml') {
             $doc .= $text;
-        } elseif ($format == 'odt') {
+        } elseif ($format === 'odt') {
             $doc .= '<text:span>';
             $doc .= $text;
             $doc .= '</text:span>';
@@ -274,10 +274,10 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin {
 
     function link($format, $url, $name, $title) {
         $doc = '';
-        if ($format == 'xhtml') {
+        if ($format === 'xhtml') {
             $doc .= '<a class="iw_eventum" href="'.$url.'" target="_blank" title="'.$title.'">'.hsc($name).'</a>';
 
-        } elseif ($format == 'odt') {
+        } elseif ($format === 'odt') {
             $url = $this->_xmlEntities($url);
             $doc .= '<text:a xlink:type="simple" xlink:href="'.$url.'">';
             $doc .= $name; // we get the name already XML encoded
