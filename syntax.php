@@ -259,6 +259,7 @@ class syntax_plugin_eventum extends DokuWiki_Syntax_Plugin
 
     private function emphasis($format, $text)
     {
+        $doc = '';
         if ($format === 'xhtml') {
             $doc .= '<i>';
             $doc .= $text;
