@@ -21,6 +21,6 @@
 	"require": {
 		"php": "^5.3.0 || ^7.0",
 		"ext-date": "*",
-		"eventum/rpc": "^3"
+		"eventum/rpc": "^3 || ^4"
 	}
 }
